@@ -1,5 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:http/http.dart' as http;
+import 'package:html/parser.dart' show parse;
+import 'dart:io';
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
+
+var news = [];
+String str = "";
 
 Widget drawer(BuildContext context) {
   double height = MediaQuery.of(context).size.height;
@@ -63,6 +79,7 @@ Widget drawer(BuildContext context) {
 }
 
 void main() {
+  HttpOverrides.global = MyHttpOverrides();
   runApp(MyApp());
 }
 
@@ -76,7 +93,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.indigo,
       ),
       debugShowCheckedModeBanner: false,
-      home: MyHomePage(),
+      home: AnimatedSplashScreen(
+          duration: 3000,
+          splash: Image.asset("assets/poly.png"),
+          nextScreen: MyHomePage(),
+          splashTransition: SplashTransition.fadeTransition,
+          backgroundColor: Colors.indigo),
     );
   }
 }
@@ -90,6 +112,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: drawer(context),
@@ -98,152 +126,84 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black87),
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-                child: ListTile(
-                  leading: FlutterLogo(size: 60.0),
-                  title: Padding(
-                    padding: const EdgeInsets.only(bottom: 6),
-                    child: Text('Заголовок списка'),
+        child: ListView.separated(
+            separatorBuilder: (context, index) =>
+                Divider(color: Colors.grey[50]),
+            padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+            itemCount: news.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black87),
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  child: ListTile(
+                    leading: Container(
+                      width: 80,
+                      child: Image.network(
+                          "https://new.mospolytech.ru/${news[index].children[0].children[0].children[0].children[0].attributes['data-src']}"),
+                    ),
+                    title: Padding(
+                      padding: const EdgeInsets.only(bottom: 6),
+                      child: Text(news[index]
+                          .children[0]
+                          .children[0]
+                          .children[2]
+                          .children[0]
+                          .text
+                          .trim()),
+                    ),
+                    subtitle: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          // Text(str),
+                          Padding(
+                              padding: const EdgeInsets.only(top: 12),
+                              child: Align(
+                                alignment: Alignment.bottomRight,
+                                child: Text(news[index]
+                                    .children[0]
+                                    .children[0]
+                                    .children[1]
+                                    .text
+                                    .trim()),
+                              )),
+                        ]),
                   ),
-                  subtitle: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 12),
-                          child: Align(
-                              alignment: Alignment.bottomRight,
-                              child: Text("29 ноября")),
-                        ),
-                      ]),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black87),
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-                child: ListTile(
-                  leading: FlutterLogo(size: 60.0),
-                  title: Padding(
-                    padding: const EdgeInsets.only(bottom: 6),
-                    child: Text('Заголовок списка'),
-                  ),
-                  subtitle: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 12),
-                          child: Align(
-                              alignment: Alignment.bottomRight,
-                              child: Text("29 ноября")),
-                        ),
-                      ]),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black87),
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-                child: ListTile(
-                  leading: FlutterLogo(size: 60.0),
-                  title: Padding(
-                    padding: const EdgeInsets.only(bottom: 6),
-                    child: Text('Заголовок списка'),
-                  ),
-                  subtitle: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 12),
-                          child: Align(
-                              alignment: Alignment.bottomRight,
-                              child: Text("29 ноября")),
-                        ),
-                      ]),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black87),
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-                child: ListTile(
-                  leading: FlutterLogo(size: 60.0),
-                  title: Padding(
-                    padding: const EdgeInsets.only(bottom: 6),
-                    child: Text('Заголовок списка'),
-                  ),
-                  subtitle: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 12),
-                          child: Align(
-                              alignment: Alignment.bottomRight,
-                              child: Text("29 ноября")),
-                        ),
-                      ]),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black87),
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-                child: ListTile(
-                  leading: FlutterLogo(size: 60.0),
-                  title: Padding(
-                    padding: const EdgeInsets.only(bottom: 6),
-                    child: Text('Заголовок списка'),
-                  ),
-                  subtitle: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 12),
-                          child: Align(
-                              alignment: Alignment.bottomRight,
-                              child: Text("29 ноября")),
-                        ),
-                      ]),
-                ),
-              ),
-            ),
-          ],
-        ),
+              );
+            }),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _loadData();
+        },
+        child: const Icon(Icons.refresh),
+        backgroundColor: Colors.indigo,
       ),
     );
+  }
+
+  _loadData() async {
+    Uri uri = Uri.parse('https://new.mospolytech.ru/news/');
+    final response = await http.get(uri);
+    if (response.statusCode == 200) {
+      var document = response.body;
+      // print(document);
+      print("!!!!!");
+      print(parse(document)
+          .getElementsByClassName("card-news-list__item")[0]
+          .children[0]
+          .children[0]
+          .children[0]
+          .children[0]
+          .attributes['data-src']);
+      setState(() {
+        news = parse(document).getElementsByClassName("card-news-list__item");
+        str = news.length.toString();
+      });
+    }
   }
 }

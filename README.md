@@ -1,16 +1,15 @@
-# news
+=======
+# NEWS
 
-A new Flutter project.
+Приложение создано для защиты пересдачи по предмету "Программирование безопасных сетевых приложений"
 
-## Getting Started
+# Снимки
 
-This project is a starting point for a Flutter application.
+# Описание
 
-A few resources to get you started if this is your first Flutter project:
+Основной функционал мобильного приложение - отображение новостей со страницы сайта Московского Политеха https://new.mospolytech.ru/news/.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Разработан с использование фреймворка Flutter
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Написано для закрытия пересдачи по предмету "Программирование безопасных сетевых приложений"
+>>>>>>> a2f0dd1ffcc2868667249c1cf5794bfb9bfa2c71
