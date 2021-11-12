@@ -4,6 +4,14 @@
 
 # Снимки
 
+![main1](https://user-images.githubusercontent.com/66256597/141457119-3d34700c-7378-49b0-afcf-8c8b916fc7ec.png)
+
+Главная страница макета часть 1
+
+![drawer](https://user-images.githubusercontent.com/66256597/141457297-e68275dd-8f59-4936-bc81-565d80efba8b.png)
+
+Выпадающее меню приложения
+
 # Описание
 
 Основной функционал мобильного приложение - отображение новостей со страницы сайта Московского Политеха https://new.mospolytech.ru/news/.
